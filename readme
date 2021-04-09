@@ -1,2 +1,68 @@
 Steps to download and run the project
 
+Note: You will have to setup a local mysql database name thinkmarkets. I also saved the details of the records I retrieved using /fetch API just in case.
+
+1. clone the project:
+    git clone git@github.com:aalnct/ExternalServiceConsumer.git
+
+2. build the project using gradle command
+    ./gradlew clean build or gradle clean build (if you do not have gradle wrapper installed)
+
+3. Start the project : Run the main class --> ExternalServiceConsumerApplication.java
+
+4. Using Postman please test the following APIs
+    there are two categories of APIs I have created
+    1. Filtering using API parameters (path variable) and updated the endpoints to accept params dynamically
+
+    2. Filter using Java Stream APIs (Java 8)
+
+
+For category 1 APIs are
+
+1. http://localhost:8080/consumer/fetch
+    endpoint it will call: https://jsonplaceholder.typicode.com/todos
+    Note: It will fetch all the details
+
+2. http://localhost:8080/consumer/fetchByUserId/{userid}
+    endpoint it will call: https://jsonplaceholder.typicode.com/todos?userId={userid}
+    Note: it will fetch based on user id provided
+
+3. http://localhost:8080/consumer/fetchByStatus/{status}
+    endpoint it will call: https://jsonplaceholder.typicode.com/todos?completed={status}
+    Note: it will filter based on the status provided i.e. completed is true (1) or not completed is false (0)
+
+4. http://localhost:8080/consumer/fetchByStatus/{userid}/{status}
+    endpoint it will call: https://jsonplaceholder.typicode.com/todos?userId={userid}&&completed={status}
+    Note: it will filter based on user id and status (i.e. completed or not completed)
+
+
+For second category of API, it will use Java 8 stream API filters to get the details
+
+1. http://localhost:8080/consumer/fetchUsingFilterStreamAPI/{userid}/{status}
+    endpoint it will call: https://jsonplaceholder.typicode.com/todos
+    Note: it will fetch all the details from endpoint and then filter it based on user ID and status
+
+2. http://localhost:8080/consumer/fetchUsingUserIDFilter/1
+   endpoint it will call: https://jsonplaceholder.typicode.com/todos
+   Note: it will fetch all the details from endpoint and then filter it based on user ID
+
+3. http://localhost:8080/consumer/fetchUsingStatusFilter/{status}
+   endpoint it will call: https://jsonplaceholder.typicode.com/todos
+   Note: it will fetch all the details from endpoint and then filter it based on status
+
+Separate API for Group BY using User ID
+
+1. http://localhost:8080/consumer/fetchConsumerDetailsGroupByUserId
+   endpoint it will call: https://jsonplaceholder.typicode.com/todos
+   Note: Once get all the data, then it will apply Java 8 Collectors.groupingBy(user ID) and return the result
+
+Health Check API (using spring actuator) - it will check the status of application, if it up or not
+    http://localhost:8080/actuator/health
+    Note: this will return the status like below
+
+    {
+        "status": "UP"
+    }
+
+
+
